@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>100 Reasons Why I Love You</title>
-<link rel="stylesheet" href="heart.css">
+<link rel="stylesheet" href="heart.css?v=2">
 </head>
 <body>
 
@@ -31,6 +31,23 @@
 </div>
 
 <div id="hint">v &mdash; vertical / horizontal &nbsp;&middot;&nbsp; space &mdash; pause &nbsp;&middot;&nbsp; r &mdash; reshuffle &nbsp;&middot;&nbsp; h &mdash; hide title</div>
+
+<div class="controls" id="controls" role="group" aria-label="Playback controls">
+  <button type="button" class="ctrl-btn" data-action="mode" aria-label="Switch between portrait and landscape">
+    <span class="ctrl-icon" aria-hidden="true">&#8635;</span><span class="ctrl-label">Landscape</span>
+  </button>
+  <button type="button" class="ctrl-btn" data-action="pause" aria-pressed="false" aria-label="Pause the animation">
+    <span class="ctrl-icon" aria-hidden="true">&#9208;</span><span class="ctrl-label">Pause</span>
+  </button>
+  <button type="button" class="ctrl-btn" data-action="reshuffle" aria-label="Reshuffle the reasons">
+    <span class="ctrl-icon" aria-hidden="true">&#8644;</span><span class="ctrl-label">Shuffle</span>
+  </button>
+  <button type="button" class="ctrl-btn" data-action="bare" aria-pressed="false" aria-label="Hide the title for a clean capture">
+    <span class="ctrl-icon" aria-hidden="true">&#10022;</span><span class="ctrl-label">Hide</span>
+  </button>
+</div>
+
+<button type="button" class="restore-ui" id="restoreUi" aria-label="Show the title and controls" title="Show the title and controls (H)">&#10022;</button>
 
 <a class="back-link" href="../Posting_Your_GF/index.html">&larr; Back to the letter</a>
 
@@ -466,6 +483,7 @@
     fit();
     buildHeart(seed);
     buildDust(seed);
+    syncControls();
   }
 
   let swapTimer = null;
@@ -478,12 +496,85 @@
     }, 560);
   }
 
+  /* ------------------------------------------------------------------
+     TOUCH CONTROLS — the same four actions as the keyboard shortcuts,
+     so the page is fully usable on a phone (and on a trackpad).
+     ------------------------------------------------------------------ */
+  const controlsEl = document.getElementById("controls");
+  const restoreEl = document.getElementById("restoreUi");
+  const btnFor = (action) => controlsEl && controlsEl.querySelector('[data-action="' + action + '"]');
+
+  function syncControls() {
+    const pauseBtn = btnFor("pause");
+    if (pauseBtn) {
+      const paused = document.body.classList.contains("paused");
+      pauseBtn.setAttribute("aria-pressed", paused ? "true" : "false");
+      pauseBtn.setAttribute("aria-label", paused ? "Resume the animation" : "Pause the animation");
+      const icon = pauseBtn.querySelector(".ctrl-icon");
+      const label = pauseBtn.querySelector(".ctrl-label");
+      if (icon) icon.textContent = paused ? "▶" : "⏸";
+      if (label) label.textContent = paused ? "Resume" : "Pause";
+    }
+
+    const bareBtn = btnFor("bare");
+    if (bareBtn) {
+      const bare = document.body.classList.contains("bare");
+      bareBtn.setAttribute("aria-pressed", bare ? "true" : "false");
+      bareBtn.setAttribute("aria-label", bare ? "Show the title" : "Hide the title for a clean capture");
+      const label = bareBtn.querySelector(".ctrl-label");
+      if (label) label.textContent = bare ? "Show" : "Hide";
+    }
+
+    const modeBtn = btnFor("mode");
+    if (modeBtn) {
+      const label = modeBtn.querySelector(".ctrl-label");
+      if (label) label.textContent = mode === "portrait" ? "Landscape" : "Portrait";
+    }
+  }
+
+  function setPaused(next) {
+    document.body.classList.toggle("paused", next);
+    syncControls();
+  }
+
+  function setBare(next) {
+    document.body.classList.toggle("bare", next);
+    sceneEl.classList.toggle("bare", next);
+    syncControls();
+  }
+
+  if (controlsEl) {
+    controlsEl.addEventListener("click", function (e) {
+      const btn = e.target.closest("button[data-action]");
+      if (!btn) return;
+      const action = btn.getAttribute("data-action");
+      if (action === "mode") {
+        applyMode(mode === "portrait" ? "landscape" : "portrait");
+      } else if (action === "pause") {
+        setPaused(!document.body.classList.contains("paused"));
+      } else if (action === "reshuffle") {
+        reshuffle();
+      } else if (action === "bare") {
+        setBare(!document.body.classList.contains("bare"));
+      }
+    });
+  }
+
+  if (restoreEl) {
+    restoreEl.addEventListener("click", function () { setBare(false); });
+  }
+
   window.addEventListener("resize", fit);
 
   let hintTimer = null;
 
   window.addEventListener("keydown", function (e) {
     const k = (e.key || "").toLowerCase();
+    const onControl = e.target && e.target.closest && e.target.closest(".controls, .restore-ui");
+
+    // A focused button handles space / enter on its own — don't act twice.
+    if (onControl && (e.key === " " || e.key === "Enter")) return;
+
     // bring the control hint back for a few seconds after any key press
     document.body.classList.add("hint-on");
     if (hintTimer) clearTimeout(hintTimer);
@@ -491,13 +582,12 @@
     if (k === "v") {
       applyMode(mode === "portrait" ? "landscape" : "portrait");
     } else if (k === " " || e.key === "Escape" || k === "p") {
-      document.body.classList.toggle("paused");
+      setPaused(!document.body.classList.contains("paused"));
       e.preventDefault();
     } else if (k === "r") {
       reshuffle();
     } else if (k === "h") {
-      document.body.classList.toggle("bare");
-      sceneEl.classList.toggle("bare", document.body.classList.contains("bare"));
+      setBare(!document.body.classList.contains("bare"));
     }
   });
 
