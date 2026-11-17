@@ -65,6 +65,11 @@ words, dust drifts in the background, and the reasons reshuffle themselves every
 | `r` | reshuffle immediately |
 | `h` | hide the title for a clean capture |
 
+On a phone — or any trackpad — the same four actions are also in a touch bar along the
+bottom of the screen: 44px pill buttons, labelled on tablets and collapsed to icons on
+narrow phones. "Hide" clears every bit of chrome for a clean screenshot, and one small
+✦ button in the corner brings the interface back.
+
 ### The 4th Monthsary (`4th_Monthsary/`)
 A shooting range on a black background. Click the gun, hit the target, and try not to
 apologize to whoever is holding it. It plays a very dramatic gunshot.
