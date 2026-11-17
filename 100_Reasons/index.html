@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>100 Reasons Why I Love You</title>
+<link rel="stylesheet" href="heart.css">
+</head>
+<body>
+
+<div id="stage">
+ <div class="fitbox" id="fitbox">
+  <div class="scene portrait" id="scene">
+    <div class="bloom"></div>
+    <div class="dust" id="dust"></div>
+    <div class="heart" id="heart"></div>
+
+    <div class="title">
+      <h1>100 Reasons Why I Love You</h1>
+      <p>a hundred reasons, all of them true</p>
+    </div>
+
+    <div class="labels">
+      <span>100 REASONS WHY I LOVE YOU</span>
+      <span id="ratio">9 : 16</span>
+    </div>
+
+    <div class="vignette"></div>
+  </div>
+ </div>
+</div>
+
+<div id="hint">v &mdash; vertical / horizontal &nbsp;&middot;&nbsp; space &mdash; pause &nbsp;&middot;&nbsp; r &mdash; reshuffle &nbsp;&middot;&nbsp; h &mdash; hide title</div>
+
+<a class="back-link" href="../Posting_Your_GF/index.html">&larr; Back to the letter</a>
+
+<script>
+(function () {
+  "use strict";
+
+  /* =====================================================================
+     CONTENT
+     ===================================================================== */
+  const STATEMENTS = [
+    "The way your *eyes* light up when you talk about things you genuinely care about.",
+    "How *effortless* it feels to talk to you, even when we have nothing specific to say.",
+    "The sound of your *laugh* when something catches you completely off guard.",
+    "How *safe* and grounded I feel whenever I am around you or talking to you.",
+    "Your *patience* when things get stressful or complicated.",
+    "The way you remember small *details* about my day and ask about them later.",
+    "How you make ordinary, *quiet* moments feel memorable.",
+    "Your *honesty*, even when it is easier to just tell someone what they want to hear.",
+    "The way you *smile* right before you tell a joke or a story.",
+    "How deeply you *care* about the people in your life.",
+    "Your *resilience* when things do not go according to plan.",
+    "The *comfort* of just sitting in silence with you without it ever feeling awkward.",
+    "How you push me to be a better person without ever making me feel like I am not enough.",
+    "Your sense of *humor* and the way we have our own inside jokes that nobody else gets.",
+    "The way you look when you are *focused* on something you are working on.",
+    "How you always know when something is on my *mind*, even if I try to hide it.",
+    "Your *kindness* to people, even when nobody is watching.",
+    "The *warmth* in your voice when you are tired or just waking up.",
+    "How *excited* you get over the little things.",
+    "The way you make me feel heard and *understood*.",
+    "Your perspective on life and how you handle challenges with *grace*.",
+    "How every plan for the *future* automatically feels better when you are in it.",
+    "The way you *listen* without immediately trying to fix everything, unless I ask.",
+    "Your loyalty and how fiercely you stand by the people you *love*.",
+    "How *natural* it feels to be completely myself around you.",
+    "The way you check in just to make sure I got *home* safe or ate properly.",
+    "Your *creativity* and the unique way you see the world.",
+    "How you never hold grudges and actually want to work through things *together*.",
+    "The way you look at me when we are in a crowded *room*.",
+    "How you turn a bad day around with just one *message* or call.",
+    "Your *determination* when you set your mind to a goal.",
+    "The softness in your *heart* despite how strong you are.",
+    "How *fun* it is to plan future trips, dates, and simple everyday routines with you.",
+    "Your *taste* in music, shows, and all the random things you introduce me to.",
+    "The *way* you apologize sincerely when you are wrong and forgive easily when I am.",
+    "How much effort you put into our relationship, even on busy days.",
+    "Your thoughtfulness in the small gestures you do without expecting anything back.",
+    "The *way* you make distance feel smaller just by being present when we talk.",
+    "How *proud* I feel just getting to call you mine.",
+    "Your *energy* and how it instantly lifts the mood whenever you walk into a room.",
+    "The way you take *care* of yourself and the people around you.",
+    "How easy it is to *trust* you completely.",
+    "Your *curiosity* and willingness to try new things with me.",
+    "The way you get slightly *competitive* over silly games or debates.",
+    "How you never make me feel *judged* for my thoughts, hobbies, or mistakes.",
+    "Your *voice* when you are telling a story you are really invested in.",
+    "The way you *value* quality time over expensive or flashy things.",
+    "How *supportive* you are of my goals and passions.",
+    "Your ability to stay *calm* and think clearly when I am overthinking.",
+    "The way you *celebrate* my wins like they are your own.",
+    "How *comfortable* it feels to share my fears and insecurities with you.",
+    "Your *authenticity* in a world where so many people try to be someone else.",
+    "The way you look when you are genuinely *happy* and relaxed.",
+    "How we can talk for *hours* and still feel like we ran out of time.",
+    "Your *empathy* and how easily you put yourself in someone else's shoes.",
+    "The way you *respect* my space while still making me feel wanted.",
+    "How much I look *forward* to the end of the day just to catch up with you.",
+    "Your intelligence and how much I enjoy having real, *deep* conversations with you.",
+    "The way you remember my *favorite* foods, drinks, and random preferences.",
+    "How you bring *peace* into my life instead of chaos.",
+    "Your *smile* that instantly makes me forget whatever I was worrying about.",
+    "The way you handle busy or *overwhelming* days without taking it out on me.",
+    "How our differences *complement* each other instead of pulling us apart.",
+    "Your willingness to *communicate* openly instead of shutting down.",
+    "The *way* you make even running errands or doing nothing feel like a real date.",
+    "How *consistent* you are in the way you treat me.",
+    "Your *gentleness* when someone is hurting or going through a hard time.",
+    "The way you *inspire* me to work harder for the life we want to build.",
+    "How *effortlessly* we fall back into rhythm even after a long, busy week.",
+    "Your sense of style and the *confidence* you carry yourself with.",
+    "The way you make me *laugh* when I am trying to stay serious.",
+    "How you *appreciate* the effort I put into things, no matter how small.",
+    "Your *maturity* in how you approach problems and relationships.",
+    "The way you say my *name*.",
+    "How safe my *heart* feels with you.",
+    "Your ability to find *silver* linings even in frustrating situations.",
+    "The way you share your thoughts, *dreams*, and worries with me.",
+    "How much better I have become at communicating since being with you.",
+    "Your *warmth*, both in how you speak and how you love.",
+    "The way you make me feel *chosen* every single day.",
+    "How *natural* it feels to imagine growing older with you.",
+    "Your *playfulness* and how you never take life too seriously all the time.",
+    "The way you stand up for what you *believe* in.",
+    "How you *listen* to the things I ramble about even if they are completely random.",
+    "Your *grace* under pressure.",
+    "The way you make me feel *appreciated* for who I actually am.",
+    "How every *memory* with you is one I want to keep replaying.",
+    "Your *sincerity* in every compliment and kind word you give.",
+    "The way you *balance* independence with closeness in our relationship.",
+    "How you remind me to slow down and enjoy the present *moment*.",
+    "Your *heart*, which is genuinely one of the best things about you.",
+    "The way you look forward to our *future* just as much as I do.",
+    "How being with you feels like coming *home*.",
+    "Your willingness to grow *together* through every season of life.",
+    "The way you bring out the *softest*, happiest version of me.",
+    "How no matter what happens in a day, knowing I have you makes everything *okay*.",
+    "Your *presence* in my life, which I never take for granted.",
+    "The way *love* stopped feeling complicated the moment it became about you.",
+    "How even on the hardest days, *choosing* you is the easiest decision I ever make.",
+    "Simply because you are you, and there is *nobody* else I would ever want by my side.",
+  ];
+
+  const PHRASES = [
+    "you are my sunshine", "amazing", "you make days brighter", "believe in yourself",
+    "thinking of you", "always in my heart", "you are loved", "i miss you",
+    "i adore you", "you are the best", "you make me smile", "you are my everything",
+    "i love you", "i am thinking of you", "my friend", "i am grateful for you",
+    "you are my heart", "you make me happy", "i am here for you", "you are wonderful",
+    "keep shining", "you are enough", "so glad you exist", "you inspire me",
+    "your smile brightens everything", "i am proud of you", "you are my calm",
+    "dream big", "you are magic", "i treasure you", "you make me believe",
+    "never forget how special you are", "you are my home", "i choose you",
+    "you are beautiful", "i believe in you", "you deserve the best", "you are loved",
+    "i am here", "your kindness is a gift", "you are my favorite person",
+    "you make life better", "you are one of a kind", "i am so grateful",
+    "you are my strength", "shine on", "you are gorgeous", "you feel like home",
+    "i adore you", "you make me feel seen", "you are my safe place", "i love you so much"
+  ];
+
+  /* =====================================================================
+     HELPERS
+     ===================================================================== */
+  function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
+  function mulberry32(seed) {
+    let a = seed >>> 0;
+    return function () {
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function makeRng(seed) {
+    const r = mulberry32(seed);
+    r.range = (a, b) => a + r() * (b - a);
+    r.int = (a, b) => Math.floor(a + r() * (b - a + 1));
+    r.choice = (a) => a[Math.floor(r() * a.length)];
+    r.shuffle = (arr) => {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(r() * (i + 1));
+        const t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+      }
+      return arr;
+    };
+    return r;
+  }
+  function parseMarkup(text) {
+    const out = [];
+    let pending = false;
+    text.split("*").forEach(function (seg, i) {
+      const key = (i % 2 === 1);
+      const parts = seg.match(/\s+|\S+/g) || [];
+      for (let p = 0; p < parts.length; p++) {
+        if (/^\s+$/.test(parts[p])) { pending = true; }
+        else { out.push({ t: parts[p], key: key }); pending = false; }
+      }
+    });
+    return out;
+  }
+
+  /* =====================================================================
+     HEART GEOMETRY — implicit curve (x^2 + y^2 - 1)^3 - x^2 y^3 = 0
+     ===================================================================== */
+  const HX = 1.13, HY_TOP = 1.24, HY_BOT = -1.0, HY_MID = (HY_TOP + HY_BOT) / 2;
+  function heartF(x, y) {
+    const a = x * x + y * y - 1;
+    return a * a * a - x * x * y * y * y;
+  }
+  function insideHeart(x, y) { return heartF(x, y) <= 0; }
+
+  /* =====================================================================
+     TEXT MEASUREMENT (uses the same font the CSS applies)
+     ===================================================================== */
+  const measureCanvas = document.createElement("canvas");
+  const mctx = measureCanvas.getContext("2d");
+  function measure(text, font) { mctx.font = font; return mctx.measureText(text).width; }
+
+  /* Words after which a line may be broken, and the two helpers that turn a
+     full sentence into short pieces that fit across the heart. */
+  const BREAK_WORDS = ["and", "that", "when", "which", "because", "but", "or",
+    "so", "then", "with", "for", "to", "into", "even", "just", "without", "how",
+    "why", "what", "while", "after", "before", "until", "though", "although",
+    "if", "as", "at", "in", "on", "by", "from", "about", "over", "under",
+    "up", "down", "out", "like", "than", "even", "still", "never", "always"];
+
+  function widthOf(words, font) {
+    let w = 0;
+    for (let i = 0; i < words.length; i++) {
+      if (i) w += measure(" ", font);
+      w += measure(words[i].t, font);
+    }
+    return w;
+  }
+
+  function chunkWords(words, font, minW, maxW) {
+    const chunks = [];
+    let cur = [], curW = 0, breakAt = -1;
+    for (let i = 0; i < words.length; i++) {
+      const wd = words[i];
+      curW += (cur.length ? measure(" ", font) : 0) + measure(wd.t, font);
+      cur.push(wd);
+      const bare = wd.t.toLowerCase().replace(/[^a-z']/g, "");
+      const isBreak = /[,.!?;:]$/.test(wd.t) || BREAK_WORDS.indexOf(bare) >= 0;
+      if (isBreak) breakAt = cur.length;
+      if (curW >= maxW) {
+        const cut = breakAt > 0 ? breakAt : cur.length;
+        chunks.push(cur.slice(0, cut));
+        cur = cur.slice(cut);
+        curW = widthOf(cur, font);
+        breakAt = -1;
+      } else if (isBreak && curW >= minW) {
+        chunks.push(cur);
+        cur = [];
+        curW = 0;
+        breakAt = -1;
+      }
+    }
+    if (cur.length) chunks.push(cur);
+    return chunks;
+  }
+
+  /* =====================================================================
+     BUILD THE HEART
+     ===================================================================== */
+  const sceneEl = document.getElementById("scene");
+  const fitboxEl = document.getElementById("fitbox");
+  const heartEl = document.getElementById("heart");
+  const dustEl = document.getElementById("dust");
+  const ratioEl = document.getElementById("ratio");
+
+  const MAX_ITEMS = 320;
+
+  function buildHeart(seed) {
+    const cs = getComputedStyle(sceneEl);
+    const num = function (name) { return parseFloat(cs.getPropertyValue(name)) || 0; };
+    const W = num("--sw"), H = num("--sh");
+    const size = num("--word-size");
+    const family = cs.getPropertyValue("--word-family").trim();
+    const line = num("--word-line");
+    const heartW = num("--heart-w");
+    const heartHF = num("--heart-h");
+    const heartCY = num("--heart-cy");
+    const rng = makeRng(seed);
+
+    const FONT = size + "px " + family;
+    const FONT_I = "italic " + FONT;
+
+    // heart box
+    const scale = Math.min((W * heartW) / (2 * HX), (H * heartHF) / (HY_TOP - HY_BOT));
+    const cx = W / 2;
+    const cy = H * heartCY + scale * HY_MID;
+    const heartTop = cy - (HY_TOP - HY_MID) * scale;
+    const heartH = (HY_TOP - HY_BOT) * scale;
+
+    // content pool — each entry is a short piece of a reason, so a piece
+    // lights up as a unit (this is how the reference video behaves)
+    const raw = [];
+    for (let i = 0; i < STATEMENTS.length; i++) {
+      raw.push({ kind: rng() < 0.22 ? "b" : "", words: parseMarkup(STATEMENTS[i]) });
+    }
+    for (let i = 0; i < PHRASES.length; i++) {
+      raw.push({ kind: "p", words: parseMarkup(PHRASES[i]) });
+    }
+    rng.shuffle(raw);
+
+    // break every reason into pieces that fit nicely across the heart
+    const maxW = scale * 0.95;
+    const minW = maxW * 0.42;
+    const pool = [];
+    for (let i = 0; i < raw.length; i++) {
+      const it = raw[i];
+      const f = it.kind === "p" ? FONT_I : FONT;
+      const chunks = chunkWords(it.words, f, minW, maxW);
+      for (let c = 0; c < chunks.length; c++) {
+        pool.push({ kind: it.kind, words: chunks[c], font: f, w: widthOf(chunks[c], f) });
+      }
+    }
+
+    let poolIdx = 0, cycles = 0;
+    const items = [];
+
+    for (let row = 0; row < 200 && items.length < MAX_ITEMS; row++) {
+      const py = cy - (HY_TOP - row * line / scale) * scale;
+      const uy = (cy - py) / scale;
+      if (uy < HY_BOT) break;
+
+      // inside intervals of this row
+      const intervals = [];
+      let start = null;
+      const N = 280;
+      for (let i = 0; i <= N; i++) {
+        const ux = -1.25 + (2.5 * i) / N;
+        const ins = insideHeart(ux, uy);
+        if (ins && start === null) start = ux;
+        if ((!ins || i === N) && start !== null) {
+          const end = ins ? ux : -1.25 + (2.5 * (i - 1)) / N;
+          intervals.push([start, end]);
+          start = null;
+        }
+      }
+      if (!intervals.length) continue;
+
+      for (let k = 0; k < intervals.length && items.length < MAX_ITEMS; k++) {
+        const x0 = cx + intervals[k][0] * scale;
+        const x1 = cx + intervals[k][1] * scale;
+        const avail = x1 - x0;
+        if (avail < size * 3) continue;
+
+        // fill this row with whole phrases
+        const rowItems = [];
+        let total = 0;
+        let look = poolIdx;
+        let guard = 0;
+        while (guard++ < 14) {
+          if (look >= pool.length) {
+            if (cycles++ > 3) break;
+            look = 0;
+            rng.shuffle(pool);
+          }
+          const it = pool[look];
+          const gap = rowItems.length ? measure(" ", it.font) : 0;
+          if (total + gap + it.w <= avail) {
+            rowItems.push(it);
+            total += gap + it.w;
+            look++;
+            poolIdx = look;
+          } else {
+            look++;                       // peek at the next, shorter phrase
+          }
+        }
+        if (!rowItems.length) continue;
+
+        let x = (x0 + x1) / 2 - total / 2;
+        const ny = clamp((py - heartTop) / heartH, 0, 1);
+        for (let i = 0; i < rowItems.length; i++) {
+          const it = rowItems[i];
+          items.push({
+            item: it, x: x, y: py,
+            ny: ny, j: rng.range(0, 0.7)
+          });
+          x += it.w + measure(" ", it.font);
+        }
+      }
+    }
+
+    // paint — one element per phrase, keyword words highlighted inside it
+    const frag = document.createDocumentFragment();
+    for (let i = 0; i < items.length; i++) {
+      const rec = items[i];
+      const it = rec.item;
+      const s = document.createElement("span");
+      s.className = "word" + (it.kind ? " " + it.kind : "");
+      for (let j = 0; j < it.words.length; j++) {
+        if (j) s.appendChild(document.createTextNode(" "));
+        const wd = it.words[j];
+        if (wd.key) {
+          const b = document.createElement("b");
+          b.className = "k";
+          b.textContent = wd.t;
+          s.appendChild(b);
+        } else {
+          s.appendChild(document.createTextNode(wd.t));
+        }
+      }
+      s.style.setProperty("--x", rec.x.toFixed(1) + "px");
+      s.style.setProperty("--y", rec.y.toFixed(1) + "px");
+      s.style.setProperty("--ny", rec.ny.toFixed(4));
+      s.style.setProperty("--j", rec.j.toFixed(3) + "s");
+      frag.appendChild(s);
+    }
+    heartEl.replaceChildren(frag);
+    return items.length;
+  }
+
+  function buildDust(seed) {
+    const cs = getComputedStyle(sceneEl);
+    const W = parseFloat(cs.getPropertyValue("--sw"));
+    const H = parseFloat(cs.getPropertyValue("--sh"));
+    const rng = makeRng(seed + 77);
+    const frag = document.createDocumentFragment();
+    for (let i = 0; i < 70; i++) {
+      const el = document.createElement("i");
+      const vars = {
+        "--x": rng.range(0, W).toFixed(0) + "px",
+        "--y": rng.range(0, H).toFixed(0) + "px",
+        "--r": rng.range(1, 3.2).toFixed(1) + "px",
+        "--dur": rng.range(14, 34).toFixed(1) + "s",
+        "--tw": rng.range(3, 8).toFixed(1) + "s",
+        "--dd": (-rng.range(0, 30)).toFixed(1) + "s",
+        "--td": (-rng.range(0, 8)).toFixed(1) + "s",
+        "--dx": rng.range(-90, 90).toFixed(0) + "px",
+        "--dy": rng.range(-70, 70).toFixed(0) + "px",
+        "--a": rng.range(0.12, 0.55).toFixed(2)
+      };
+      for (const k in vars) el.style.setProperty(k, vars[k]);
+      frag.appendChild(el);
+    }
+    dustEl.replaceChildren(frag);
+  }
+
+  /* =====================================================================
+     MODE / RESIZE / KEYS
+     ===================================================================== */
+  let mode = "portrait";
+  let seed = 2026;
+
+  function fit() {
+    const cs = getComputedStyle(sceneEl);
+    const W = parseFloat(cs.getPropertyValue("--sw"));
+    const H = parseFloat(cs.getPropertyValue("--sh"));
+    const scale = Math.min(window.innerWidth / W, window.innerHeight / H);
+    sceneEl.style.setProperty("--fit", scale.toFixed(4));
+    fitboxEl.style.setProperty("--fw", (W * scale).toFixed(1) + "px");
+    fitboxEl.style.setProperty("--fh", (H * scale).toFixed(1) + "px");
+  }
+
+  function applyMode(next, newSeed) {
+    mode = next;
+    if (newSeed !== undefined) seed = newSeed;
+    sceneEl.className = "scene " + mode + (document.body.classList.contains("bare") ? " bare" : "");
+    ratioEl.textContent = mode === "portrait" ? "9 : 16" : "3 : 2";
+    fit();
+    buildHeart(seed);
+    buildDust(seed);
+  }
+
+  let swapTimer = null;
+  function reshuffle(newSeed) {
+    if (swapTimer) clearTimeout(swapTimer);
+    heartEl.classList.add("swapping");
+    swapTimer = setTimeout(function () {
+      buildHeart(newSeed === undefined ? (seed = (seed * 1103515245 + 12345) % 2147483647) : newSeed);
+      heartEl.classList.remove("swapping");
+    }, 560);
+  }
+
+  window.addEventListener("resize", fit);
+
+  let hintTimer = null;
+
+  window.addEventListener("keydown", function (e) {
+    const k = (e.key || "").toLowerCase();
+    // bring the control hint back for a few seconds after any key press
+    document.body.classList.add("hint-on");
+    if (hintTimer) clearTimeout(hintTimer);
+    hintTimer = setTimeout(function () { document.body.classList.remove("hint-on"); }, 4000);
+    if (k === "v") {
+      applyMode(mode === "portrait" ? "landscape" : "portrait");
+    } else if (k === " " || e.key === "Escape" || k === "p") {
+      document.body.classList.toggle("paused");
+      e.preventDefault();
+    } else if (k === "r") {
+      reshuffle();
+    } else if (k === "h") {
+      document.body.classList.toggle("bare");
+      sceneEl.classList.toggle("bare", document.body.classList.contains("bare"));
+    }
+  });
+
+  /* ------------------------------------------------------------------
+     auto reshuffle so every statement gets its turn in the heart
+     ------------------------------------------------------------------ */
+  setInterval(function () {
+    if (!document.body.classList.contains("paused")) reshuffle();
+  }, 26000);
+
+  /* ------------------------------------------------------------------
+     optional FPS readout:  index.html?fps=1
+     ------------------------------------------------------------------ */
+  if (/[?&]fps=1/.test(location.search)) {
+    let frames = 0, last = performance.now();
+    (function tick(now) {
+      frames++;
+      if (now - last >= 2000) {
+        console.log("fps ~", Math.round(frames / ((now - last) / 1000)));
+        frames = 0; last = now;
+      }
+      requestAnimationFrame(tick);
+    })(performance.now());
+  }
+
+  applyMode(mode);
+})();
+</script>
+</body>
+</html>

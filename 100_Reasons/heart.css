@@ -1,0 +1,350 @@
+/* =============================================================
+   100 THINGS ABOUT YOU — heart.css
+   -------------------------------------------------------------
+   Every motion in this project lives here. The HTML only measures
+   the text, works out where each phrase sits inside the heart and
+   writes that position into CSS custom properties (--x, --y, --ny,
+   --j). Everything after that — the shimmer, the glow, the bloom,
+   the dust, the title — is plain CSS you can retune freely.
+
+   HOW THE SHIMMER WORKS
+   Each phrase carries its height in the heart as --ny (0 at the
+   bottom, 1 at the top). The animation delay is
+       calc(var(--ny) * var(--cycle) + var(--j))
+   so the bright band is delayed more the higher the phrase sits:
+   the bottom of the heart lights first and the band travels upward,
+   once per --cycle. --j is a small random offset so the band is
+   never a perfectly straight line.
+
+   KNOBS
+     --cycle      length of one full sweep up the heart
+     --word-size  type size of the heart text
+     --glow       neon halo around the phrases
+     --glow-key   brighter halo around highlighted words
+     --title-size size of the title
+   Per-format values (font size, heart size, title position) live in
+   .scene.portrait and .scene.landscape further down.
+   ============================================================= */
+
+:root {
+  --bg:         #050308;
+  --rose-deep:  #b93f6c;
+  --rose:       #ff6f9f;
+  --rose-soft:  #ff9ec2;
+  --rose-pale:  #ffd9e8;
+  --rose-dim:   #8d2f54;
+
+  --cycle:      7s;    /* one sweep of the light band up the heart   */
+  --glow:       0 0 5px rgba(255,90,150,.55), 0 0 16px rgba(255,60,130,.26);
+  --glow-key:   0 0 7px rgba(255,170,205,.8), 0 0 22px rgba(255,90,160,.5);
+
+  --word-family: "Segoe UI", Calibri, "Gill Sans MT", "Trebuchet MS", Helvetica, Arial, sans-serif;
+  --script-font: "Segoe Script", "Brush Script MT", "Bradley Hand", Georgia, serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  background: #000;
+  overflow: hidden;
+  color: #b5637f;
+  font-family: var(--word-family);
+}
+
+/* ------------------------------------------------------------------
+   STAGE
+   ------------------------------------------------------------------ */
+#stage {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+/* The scene is authored at a fixed design size (1080x1920 or 1200x800)
+   and scaled down with a transform. The fit-box holds the scaled size
+   and clips, so the page never grows an oversized scroll area. */
+.fitbox {
+  position: relative;
+  width: var(--fw);
+  height: var(--fh);
+  overflow: hidden;
+}
+
+.scene {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--sw);
+  height: var(--sh);
+  transform: scale(var(--fit, 1));
+  transform-origin: top left;
+  background: var(--bg);
+  overflow: hidden;
+}
+
+/* --- mode presets: the only place the two formats differ -------- */
+.scene.portrait {
+  --sw: 1080px; --sh: 1920px;
+  --word-size: 18px;
+  --word-line: 29px;
+  --heart-w: .96;
+  --heart-h: .64;
+  --heart-cy: .52;
+  --title-size: 46px;
+  --sub-size: 17px;
+  --label-size: 13px;
+  --title-y: 218px;
+  --pad: 56px;
+  --bloom-y: 52%;
+}
+
+.scene.landscape {
+  --sw: 1200px; --sh: 800px;
+  --word-size: 13px;
+  --word-line: 21px;
+  --heart-w: .50;
+  --heart-h: .78;
+  --heart-cy: .555;
+  --title-size: 34px;
+  --sub-size: 14px;
+  --label-size: 12px;
+  --title-y: 62px;
+  --pad: 48px;
+  --bloom-y: 54%;
+}
+
+/* ------------------------------------------------------------------
+   BACKGROUND — pulsing rose bloom
+   ------------------------------------------------------------------ */
+.bloom {
+  position: absolute;
+  inset: -8%;
+  background: radial-gradient(58% 42% at 50% var(--bloom-y),
+              rgba(255,45,105,.20), rgba(160,15,75,.06) 46%, transparent 72%);
+  animation: bloom 6.4s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+@keyframes bloom {
+  0%, 100% { opacity: .70; transform: scale(1); }
+  50%      { opacity: 1;   transform: scale(1.05); }
+}
+
+/* ------------------------------------------------------------------
+   THE HEART — one span per word
+   --x / --y : position inside the scene (set by JS)
+   --ny      : 0 at the bottom of the heart, 1 at the top
+   --j       : per-word jitter so the band is not a perfect line
+   ------------------------------------------------------------------ */
+.heart {
+  position: absolute;
+  inset: 0;
+  transition: opacity .55s ease;
+}
+.heart.swapping { opacity: 0; }
+
+.word {
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin: 0;
+  white-space: pre;
+  font-family: var(--word-family);
+  font-size: var(--word-size);
+  line-height: 1;
+  color: var(--rose-deep);
+  text-shadow: var(--glow);
+  transform: translate3d(var(--x), var(--y), 0);
+  animation: wordCycle var(--cycle) linear infinite both;
+  animation-delay: calc(var(--ny) * var(--cycle) + var(--j));
+  /* keeps the glow rasterised once; the shimmer then costs no repaints */
+  will-change: opacity;
+}
+
+@keyframes wordCycle {
+  0%      { opacity: .10; }
+  12%     { opacity: .22; }
+  24%     { opacity: 1; }
+  40%     { opacity: .88; }
+  58%     { opacity: .28; }
+  100%    { opacity: .10; }
+}
+
+/* keyword words inside a statement (from the original *markup*) */
+.word b.k {
+  font-weight: inherit;
+  color: var(--rose-pale);
+  text-shadow: var(--glow-key);
+}
+
+/* the short phrases from the reference video */
+.word.p {
+  font-style: italic;
+  color: var(--rose-soft);
+  animation-name: wordCycleSoft;
+}
+@keyframes wordCycleSoft {
+  0%      { opacity: .12; }
+  12%     { opacity: .24; }
+  24%     { opacity: 1; }
+  40%     { opacity: .90; }
+  58%     { opacity: .30; }
+  100%    { opacity: .12; }
+}
+
+/* brighter tone for some statements, so the heart has depth */
+.word.b { color: var(--rose); }
+
+/* ------------------------------------------------------------------
+   DUST
+   ------------------------------------------------------------------ */
+.dust { position: absolute; inset: 0; pointer-events: none; }
+.dust i {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--r);
+  height: var(--r);
+  border-radius: 50%;
+  background: #ffc2da;
+  box-shadow: 0 0 7px rgba(255,110,170,.85);
+  opacity: 0;
+  animation: dustMove var(--dur) linear infinite,
+             dustTwinkle var(--tw) ease-in-out infinite;
+  animation-delay: var(--dd), var(--td);
+}
+@keyframes dustMove {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(var(--dx), var(--dy), 0); }
+}
+@keyframes dustTwinkle {
+  0%, 100% { opacity: 0; }
+  40%      { opacity: var(--a); }
+  72%      { opacity: calc(var(--a) * .3); }
+}
+
+/* ------------------------------------------------------------------
+   TITLE / LABELS
+   ------------------------------------------------------------------ */
+.title {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: var(--title-y);
+  text-align: center;
+  transition: opacity .6s ease;
+}
+.title h1 {
+  margin: 0;
+  font-family: var(--script-font);
+  font-weight: 400;
+  font-size: var(--title-size);
+  letter-spacing: .01em;
+  color: #ffdcea;
+  text-shadow: 0 0 18px rgba(255,80,140,.5), 0 0 48px rgba(255,60,130,.32);
+  animation: titleGlow 5.5s ease-in-out infinite;
+}
+@keyframes titleGlow {
+  0%, 100% { opacity: .88; }
+  50%      { opacity: 1; }
+}
+.title p {
+  margin: 12px 0 0;
+  font-size: var(--sub-size);
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: rgba(226,140,175,.55);
+}
+
+.labels {
+  position: absolute;
+  left: var(--pad);
+  right: var(--pad);
+  bottom: calc(var(--pad) * .8);
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--label-size);
+  letter-spacing: .2em;
+  color: rgba(190,100,138,.45);
+  transition: opacity .6s ease;
+}
+
+/* hide the chrome for a clean capture (press H) */
+.scene.bare .title,
+.scene.bare .labels { opacity: 0; }
+
+/* ------------------------------------------------------------------
+   VIGNETTE + STATE
+   ------------------------------------------------------------------ */
+.vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(72% 58% at 50% 50%,
+              rgba(0,0,0,0) 38%, rgba(0,0,0,.45) 76%, rgba(0,0,0,.82) 100%);
+}
+
+.paused * { animation-play-state: paused !important; }
+
+#hint {
+  position: fixed;
+  left: 50%;
+  bottom: 8px;
+  transform: translateX(-50%);
+  max-width: 96vw;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  font-size: 10px;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  color: #4a3a44;
+  user-select: none;
+  pointer-events: none;
+  z-index: 10;
+  /* fade the control hint away so a recording stays clean */
+  animation: hintFade 13s ease forwards;
+}
+body.hint-on #hint { animation: none; opacity: 1; }
+
+@keyframes hintFade {
+  0%, 80% { opacity: 1; }
+  100%    { opacity: 0; }
+}
+
+/* ------------------------------------------------------------------
+   BACK LINK — route back into the album without leaving the site
+   ------------------------------------------------------------------ */
+.back-link {
+  position: fixed;
+  top: 14px;
+  left: 16px;
+  z-index: 12;
+  border: 1px solid rgba(190, 100, 138, .24);
+  border-radius: 999px;
+  background: rgba(5, 3, 8, .55);
+  padding: .45rem .85rem;
+  font-family: var(--word-family);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: rgba(190, 100, 138, .6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  transition: color .25s ease, border-color .25s ease, transform .25s ease;
+}
+.back-link:hover {
+  color: var(--rose-soft);
+  border-color: rgba(255, 158, 194, .45);
+  transform: translateY(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .word { animation-duration: 30s !important; }
+  .dust i, .bloom, .title h1 { animation: none !important; }
+}
