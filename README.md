@@ -192,7 +192,7 @@ They also import `@vercel/node` and `@supabase/supabase-js`, so the project need
 
 ## 💌 Credits
 
-Written, designed, and built by **Dave** ([GitHub](https://github.com/Vichima)) for
+Written, designed, and built by **Dave** ([GitHub](https://github.com/mstryd)) for
 **Jay Ann**.
 
 Every photo, word, and animation in here was made for one person.
