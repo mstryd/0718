@@ -8,6 +8,10 @@ designed, and obsessed over for someone specific.
 
 > *Made with ❤️ for Jay Ann*
 
+> ⚠️ **All rights reserved.** This is a proprietary, non-open-source project. Copying,
+> modifying, distributing, or creating derivative works from any part of it is not
+> allowed. See [License](#-license).
+
 ---
 
 ## 🗂 The timeline
@@ -188,9 +192,33 @@ Written, designed, and built by **Dave** ([GitHub](https://github.com/Vichima)) 
 
 Every photo, word, and animation in here was made for one person.
 
+This is a private, copyrighted work — please read the [License](#-license) before
+copying, modifying, redistributing, or building on anything in this repository.
+
 ---
 
 ## 📄 License
 
-Personal project. All photos, letters, and artwork belong to their author.
-Feel free to look, but please don't reuse them elsewhere. 💚
+**© 2026 Dave. All rights reserved.**
+
+This project is proprietary. It is not released under an open-source license, and no
+permission is granted to reuse any part of it without the author's express written consent.
+
+You are welcome to **view** this repository and the pages it hosts for personal,
+non-commercial use. You may **not**:
+
+- **Copy** or reproduce any part of the project — the code, pages, text, letters,
+  photos, audio, video, or artwork
+- **Modify**, adapt, translate, patch, or otherwise create **derivative works** from
+  any part of the project
+- **Distribute**, sublicense, lease, rent, sell, publish, or otherwise make any part of
+  the project available to others, with or without changes
+- Use the code, design, content, or assets in any other project, commercial or
+  non-commercial
+- Remove or alter any authorship, copyright, or attribution notice
+
+Cloning or viewing this repository for personal use does not grant any of the rights
+above. If you want to reuse something here, ask first — the answer might be yes.
+
+All photos, letters, artwork, and written content belong to their author and to the
+people they were made for. Please treat them accordingly. 💚
