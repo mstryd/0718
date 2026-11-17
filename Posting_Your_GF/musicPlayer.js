@@ -19,7 +19,7 @@ function initMusicPlayer() {
     audio.addEventListener('pause', () => updateMusicPlayerState(false));
     audio.addEventListener('ended', () => updateMusicPlayerState(false));
 
-    setTrackInfo('I Like U', 'NIKI', 'media/I_Like_U.mp4', 'media/I_like_you_Cover.jpg');
+    setTrackInfo('I Like U', 'NIKI', 'media/I_Like_U.mp4', 'media/I_like_you_cover.jpg');
     enableAudio();
 }
 
